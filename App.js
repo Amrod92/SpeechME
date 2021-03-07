@@ -4,35 +4,59 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-community/async-storage';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import OnboardingScreen from './screens/OnboardingScreen';
 import Homepage from './screens/Homepage';
 import Texts from './screens/Texts';
 
 const HomeStack = createStackNavigator();
-const DetailsStack = createStackNavigator();
-const Tab = createBottomTabNavigator();
+const TextsStack = createStackNavigator();
+const OnboardingStack = createStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
-const HomeStackScreen = ({navigation}) => (
-  <HomeStack.Navigator
-    screenoptions = {{ 
-      headerStyle: {
-        backgroundColor: '#009387',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold'
-      }
-     }}>
-    <HomeStack.Screen
-      name="SpeechMe"
-      component={Homepage}
-      options={{
-        title: "SpeechMe"
-      }}/>
-    </HomeStack.Navigator>
-  );
+const OnboardingStackScreen = () => (
+  <OnboardingStack.Navigator>
+          <OnboardingStack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }}/>
+  </OnboardingStack.Navigator>
+);
+const HomeStackScreen = () => (
+  <HomeStack.Navigator>
+          <HomeStack.Screen name="SpeechMe" component={Homepage} options={{ 
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              color: '#2a46ff',
+              fontFamily: 'Montserrat',
+              fontWeight: "bold",
+              fontSize: 18
+            },
+            headerStyle: {
+              shadowColor: '#f4f6ff',
+              elevation: 0
+            }
+           }}/>
+  </HomeStack.Navigator>
+);
+const TextsStackScreen = () => (
+  <TextsStack.Navigator>
+          <TextsStack.Screen name="Texts" component={Texts} options={{ 
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              color: '#2a46ff',
+              fontFamily: 'Montserrat',
+              fontWeight: "bold",
+              fontSize: 18
+            },
+            headerStyle: {
+              shadowColor: '#f4f6ff',
+              elevation: 0
+            }
+           }}/>
+  </TextsStack.Navigator>
+);
+
+
 
 const App: () => React$Node = () => {
   const [isFirstLaunch, setIsFirstLaunch] = useState(null);
@@ -54,15 +78,54 @@ const App: () => React$Node = () => {
     return (
       <>
       <NavigationContainer>
-        <HomeStack.Navigator>
-          <HomeStack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }}/>
-          <HomeStack.Screen name="Homepage" component={HomeStackScreen} />
-        </HomeStack.Navigator>    
+        <Tab.Navigator>
+          <Tab.Screen 
+          name="Homepage" 
+          component={HomeStackScreen} 
+          options={{
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ color }) => (
+              <Icon name="home" size={26} color="#f4f6ff" />
+            ),
+          }}/>
+          <Tab.Screen 
+            name="Texts"
+            component={TextsStackScreen}
+            options={{
+              tabBarLabel: 'Texts',
+              tabBarIcon: ({ color }) => (
+                <Icon name="file-word" size={26} color="#f4f6ff" />
+              ),
+            }} />
+        </Tab.Navigator>
       </NavigationContainer>
       </>
     );
   } else {
-    return <Homepage />;
+    return (
+      <NavigationContainer>
+        <Tab.Navigator>
+        <Tab.Screen 
+          name="Homepage" 
+          component={HomeStackScreen} 
+          options={{
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ color }) => (
+              <Icon name="home" size={26} color="#f4f6ff" />
+            ),
+          }}/>
+          <Tab.Screen 
+            name="Texts"
+            component={TextsStackScreen}
+            options={{
+              tabBarLabel: 'Texts',
+              tabBarIcon: ({ color }) => (
+                <Icon name="file" size={26} color="#f4f6ff" />
+              ),
+            }} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
   }
 };
 
